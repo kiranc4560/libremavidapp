@@ -1,0 +1,9 @@
+data={'android_version':'10.0.0',
+'app_path':'',
+'ssid_name':'untraceable',
+'wifi_password':'61162433',
+'device_macid':'SmartIR_0498',
+'avs_email':'libreavs2@gmail.com',
+'avs_password':'alexatest2',
+'Active_ssid_name':'SmartIR_700498'
+}
