@@ -52,7 +52,7 @@ def do_avs_login_return_to_home(driver, logger):
         #Returning to App Native view.
         driver.switch_to.context('NATIVE_APP')
         logger.info("****Return to Native view from Web view successfully****")
-        things_to_try=WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//android.widget.TextView[@text="Things to try"]')))
+        things_to_try=WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, '//android.widget.TextView[@text="Things to try"]')))
         if 'Things to try' == things_to_try.text:
             print("AVS Login Successfully done")
             logger.info("****AVS login done Successfully****")
@@ -69,7 +69,7 @@ def do_avs_login_return_to_home(driver, logger):
         driver.switch_to.context('NATIVE_APP')
         logger.info("****Return to Native view from Web view successfully****")
         
-        things_to_try=WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//android.widget.TextView[@text="Things to try"]')))
+        things_to_try=WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, '//android.widget.TextView[@text="Things to try"]')))
        
         if 'Things to try' == things_to_try.text:
             print("AVS Login Successfully done")
@@ -126,17 +126,10 @@ def avs_login(driver, logger):
         print('Yes, Amazon Shopping App installed in the client machine')
         logger.info("****Yes, Amazon Shopping App installed in the client machine, Avs credetials are being taked from the Amazon App ****")
         tap_on_element(driver, LOGIN_WITH_AMAZON[0],5)
-        """time.sleep(40)
-        webview = driver.contexts[1]    
-        if webview=='WEBVIEW_chrome':
-            print(webview)
-            driver.switch_to.context(webview)
-            logger.info("****Successfully switched from Native mobile view to webview****")
-            time.sleep(2)
-            logger.info("****Click Allow to enable the Accept the terms and regulations ****")
-            allow =driver.find_element_by_xpath("//input[@name='acknowledgementApproved']")
-            allow.click()
-            things_to_try=WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//android.widget.TextView[@text="Things to try"]')))
+        try:
+            print('Yes, Amazon Shopping App installed and the Credentials to get bieng Fetched from the Amazon Shopping App')
+            logger.info("****Yes, Amazon Shopping App installed and the Credentials to get bieng Fetched from the Amazon Shopping App")
+            things_to_try=WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//android.widget.TextView[@text="Things to try"]')))
        
             if 'Things to try' == things_to_try.text:
                 print("AVS Login Successfully done")
@@ -146,18 +139,39 @@ def avs_login(driver, logger):
                 print('AVS Login Failed')
                 logger.info("****AVS login Failed****")
                 time.sleep(30)
-        """
-        things_to_try=WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//android.widget.TextView[@text="Things to try"]')))
+            
+        except:
+            AMZ_sign_In=WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//android.view.View[@text="Sign-In"]')))
+            print('Yes, Amazon Shopping App installed and entering the Credentials to get Login for the first time if logged in')
+            logger.info("****Yes, Amazon Shopping App installed and entering the Credentials to get Login for the first time if logged in")
+            print(AMZ_sign_In.text)
+            time.sleep(0.5)
+            AVSEmail, AVSPwd=driver.find_elements(By.XPATH, '//android.widget.EditText[@index="1"]')
+            time.sleep(0.2)
+            AVSEmail.clear()
+            time.sleep(0.1)
+            AVSEmail.send_keys(str(data['avs_email']))
+            logger.info("****Cleared the Emain text and Entering the email"+data['avs_email']+"****")
+            time.sleep(0.5)
+            AVSPwd.clear()
+            time.sleep(0.5)
+            AVSPwd.send_keys(str(data['avs_password']))
+            logger.info("****Cleared the Password text and Entering the Password"+data['avs_password']+"****")
+            time.sleep(0.5)
+            driver.hide_keyboard()
+            logger.info("****Hide Keyboard****")
+            time.sleep(0.5) 
+            things_to_try=WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, '//android.widget.TextView[@text="Things to try"]')))
        
-        if 'Things to try' == things_to_try.text:
-            print("AVS Login Successfully done")
-            logger.info("****AVS login done Successfully****")
-            time.sleep(30)
-        else:
-            print('AVS Login Failed')
-            logger.info("****AVS login Failed****")
-            time.sleep(30)
-        
+            if 'Things to try' == things_to_try.text:
+                print("AVS Login Successfully done")
+                logger.info("****AVS login done Successfully****")
+                time.sleep(30)
+            else:
+                print('AVS Login Failed')
+                logger.info("****AVS login Failed****")
+                time.sleep(30)
+            
     else:
         print("No, Amamzon Shopping app is not installed on client machine")
         logger.info("****No, Amamzon Shopping app is not installed on client machine****")

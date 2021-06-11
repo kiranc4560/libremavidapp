@@ -1,6 +1,7 @@
 import os
 import subprocess
 from appium import webdriver
+from datetime import date
 from selenium.webdriver.common.by import By
 from appium.webdriver.common.touch_action import TouchAction
 from selenium.webdriver.support.ui import WebDriverWait
@@ -21,6 +22,15 @@ def android_info(command):
     device_info=subprocess.Popen(command, shell=False)
     return device_info.communicate()
     
+def create_file(dirname,filename):
+    today = date.today()
+    d4 = today.strftime("%b-%d-%Y")
+    mainpath=os.getcwd()+'\\'+dirname+'\\' + d4
+    if not os.path.exists(mainpath):
+        os.mkdir(mainpath)
+        return os.path.join(mainpath, filename)
+    else:
+        return os.path.join(mainpath, filename)
 
 def setUp():
     "Setup for the test"
@@ -28,24 +38,25 @@ def setUp():
     desired_caps['automationName'] = 'UiAutomator2'
     desired_caps['browserName '] = 'Chrome'
     desired_caps['platformName'] = 'Android'
-    desired_caps['platformVersion'] ='10.0.0'
+    desired_caps['platformVersion'] ='8.1.0'
     desired_caps['deviceName'] = '$'+ str(android_info('adb get-serialno')[0])
+    #desired_caps['deviceId']='92.168.1.102:5555'
     # Since the app is already installed launching it using package and activity name
     desired_caps['appPackage'] = 'com.libre.irremote'
     desired_caps['appActivity'] = 'com.libre.irremote.SplashScreenActivity'
     # Adding appWait Activity since the activity name changes as the focus shifts to the ATP WTA app's first page
     #desired_caps['appWaitActivity'] ='com.hama_sirium.ActiveScenesListActivity' #'com.libre.irremote.irActivites.IRSignUpLoginWebViewActivity'
     desired_caps['noReset '] = 'true'
-    #desired_caps['autoWebview '] = 'true'
+    desired_caps['autoWebview '] = 'true'
     desired_caps['chromedriverExecutable'] = working_dri()+"\webdrivers\chromedriver.exe"
-    #desired_caps['chromeOptions'] = {'androidUseRunningApp': True, 'w3c': False}
+    desired_caps['chromeOptions'] = {'androidUseRunningApp': True, 'w3c': False, 'androidPackage': 'com.android.chrome'}
     desired_caps['setWebContentsDebuggingEnabled '] = 'true'
     desired_caps['autoGrantPermissions'] = 'true'
        
     return webdriver.Remote('http://127.0.0.1:4723/wd/hub', desired_caps)
 
 
-screenrecordings=working_dri()+"\screenrecordings" 
+#screenrecordings=working_dri()+"\screenrecordings" 
 
 def start_screen_record(driver,logger):
     driver.start_recording_screen()
@@ -54,7 +65,8 @@ def start_screen_record(driver,logger):
 def stop_screen_record(driver, logger): 
     screen_record=driver.stop_recording_screen()
     video_Name=driver.current_activity+time.strftime("%Y_%m_%d_%H%M%S")
-    fileName = os.path.join(screenrecordings,video_Name+".mp4")
+    fileName = create_file(screenrecordings,video_Name+".mp4")
+    
     with open(fileName, 'wb') as vd:
         vd.write(base64.b64decode(screen_record))
     logger.info("****screen recording stored in the following path screenrecordings\\"+video_Name+".mp4"+"****")

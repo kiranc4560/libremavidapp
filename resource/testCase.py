@@ -114,9 +114,9 @@ def verify_avs_login_on_post_setup(driver, logger):
     
     AD_Name=driver.find_element(By.XPATH,'//android.widget.TextView[@text="'+str(data["Active_ssid_name"])+'"]')
     if AD_Name.text== str(data["Active_ssid_name"]):
-        Active_device=driver.find_element(By.ID,'com.libre.irremote:id/advancedSettings')
+        Active_device_settings=driver.find_element(By.ID,'com.libre.irremote:id/advancedSettings')
         logger.info("****Select Active Scene of MACID "+" "+str(data["Active_ssid_name"])+"****")
-        tap_on_element(driver, Active_device,6)
+        tap_on_element(driver, Active_device_settings,6)
     
     login=WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.ID, 'com.libre.irremote:id/tv_amazon_login')))#'//android.widget.LinearLayout[@id="ll_alexa_settings"]/android.widget.TextView[@index="2"]')))
     if login.text=='Log-In':

@@ -5,5 +5,6 @@ data={'android_version':'10.0.0',
 'device_macid':'SmartIR_0498',
 'avs_email':'libreavs2@gmail.com',
 'avs_password':'alexatest2',
-'Active_ssid_name':'SmartIR_700498'
+'Active_ssid_name':'SmartIR_700498',
+'ble_ssid_name':'SmartIR_700499'
 }
